@@ -4,6 +4,7 @@ import com.github.langsot.tgweather.Entity.Status;
 import com.github.langsot.tgweather.openWeather.controller.OpenWeatherRestTemplate;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -17,8 +18,10 @@ import java.util.*;
 @Slf4j
 @Component
 public class Bot extends TelegramLongPollingBot {
-    private static final String TOKEN = "5337630732:AAGNYzRkXSDL6woOCWf8mvexB5yUdn2P_gE";
-    private static final String BOT_NAME = "weather_tsk_bot";
+    @Value("${telegram.token}")
+    private String TOKEN;
+    @Value("${telegram.bot.name}")
+    private String BOT_NAME;
 
     private static final Map<Long, Status> CACHE = new HashMap<>();
     public static final TreeSet<Responce> CACHE_CITY = new TreeSet<>();

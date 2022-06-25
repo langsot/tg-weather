@@ -12,7 +12,7 @@ import org.telegram.telegrambots.bots.DefaultBotOptions;
 @SpringBootApplication
 public class TgWeatherApplication {
     @Value("${telegram.token}")
-    String token;
+    private String token;
 
     public static void main(String[] args) {
         SpringApplication.run(TgWeatherApplication.class, args);
