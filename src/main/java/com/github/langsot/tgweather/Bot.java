@@ -49,8 +49,16 @@ public class Bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         Long id = update.getMessage().getChatId();
 
+        if (update.getMessage().hasLocation()) {
+            Double lat = update.getMessage().getLocation().getLatitude();
+            Double lon = update.getMessage().getLocation().getLongitude();
+            WeatherEntity weather = weatherRestTemplate.getWeatherApiLocation(lat, lon);
+            execute(SendMessage.builder()
+                    .chatId(id.toString())
+                    .text(weather.toString())
+                    .build());
 
-        if (update.getMessage().getText().equals("/start")) {
+        } else if (update.getMessage().getText().equals("/start")) {
             KeyboardRow row = new KeyboardRow();
                 row.add(KeyboardButton.builder().text("Отправить геолокацию").requestLocation(true).build());
                 row.add(KeyboardButton.builder().text("Отправить город").build());
@@ -79,7 +87,7 @@ public class Bot extends TelegramLongPollingBot {
             String city = update.getMessage().getText();
             try {
                 log.info("Поиск города {}", city);
-                WeatherEntity weather = weatherRestTemplate.getWeatherApi(city);
+                WeatherEntity weather = weatherRestTemplate.getWeatherApiCity(city);
                 execute(SendMessage.builder()
                         .chatId(id.toString())
                         .text(weather.toString())
