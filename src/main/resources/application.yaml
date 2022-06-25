@@ -1,0 +1,6 @@
+telegram:
+  token : 5337630732:AAGNYzRkXSDL6woOCWf8mvexB5yUdn2P_gE
+  bot_name : weather_tsk_bot
+
+weather:
+  url : http://api.openweathermap.org/data/2.5/weather?q={city}&APPID=85aa52a555dac6ac36c4ecffbe15e13d&units=metric&lang=ru
