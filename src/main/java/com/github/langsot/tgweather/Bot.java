@@ -1,6 +1,7 @@
 package com.github.langsot.tgweather;
 
 import com.github.langsot.tgweather.Entity.Status;
+import com.github.langsot.tgweather.openWeather.Entity.WeatherEntity;
 import com.github.langsot.tgweather.openWeather.controller.OpenWeatherRestTemplate;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -19,14 +20,13 @@ import java.util.*;
 @Component
 public class Bot extends TelegramLongPollingBot {
     @Value("${telegram.token}")
-    private String TOKEN;
-    @Value("${telegram.bot.name}")
-    private String BOT_NAME;
+    private String token;
+    @Value("${telegram.bot_name}")
+    private String botName;
 
     private static final Map<Long, Status> CACHE = new HashMap<>();
-    public static final TreeSet<Responce> CACHE_CITY = new TreeSet<>();
 
-    private OpenWeatherRestTemplate weatherRestTemplate;
+    private final OpenWeatherRestTemplate weatherRestTemplate;
 
     public Bot(OpenWeatherRestTemplate weatherRestTemplate) {
         this.weatherRestTemplate = weatherRestTemplate;
@@ -34,12 +34,12 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return BOT_NAME;
+        return botName;
     }
 
     @Override
     public String getBotToken() {
-        return TOKEN;
+        return token;
     }
 
 
@@ -76,13 +76,22 @@ public class Bot extends TelegramLongPollingBot {
                     .build());
 
         } else if (CACHE.containsKey(id)) {
-            Responce responce = Responce.builder().chatId(id).city(update.getMessage().getText()).time(new Random().nextInt(10)).build();
-            log.info("Добавляю город {}", responce.getCity());
-            CACHE_CITY.add(responce);
-            execute(SendMessage.builder()
-                    .chatId(id.toString())
-                    .text("Поиск погоды для - " + update.getMessage().getText())
-                    .build());
+            String city = update.getMessage().getText();
+            try {
+                log.info("Поиск города {}", city);
+                WeatherEntity weather = weatherRestTemplate.getWeatherApi(city);
+                execute(SendMessage.builder()
+                        .chatId(id.toString())
+                        .text(weather.toString())
+                        .build());
+
+            } catch (Exception e) {
+                log.error("Ошибка в поиске по имени города");
+                execute(SendMessage.builder()
+                        .chatId(id.toString())
+                        .text("Город " + city + " не найден")
+                        .build());
+            }
         }
     }
 }

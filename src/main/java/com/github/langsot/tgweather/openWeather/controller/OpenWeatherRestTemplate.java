@@ -8,10 +8,10 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class OpenWeatherRestTemplate {
 
-    @Value("${open.weather.api}")
+    @Value("${weather.url}")
     private String weatherSuite;
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     public OpenWeatherRestTemplate(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
