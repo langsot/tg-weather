@@ -1,8 +1,9 @@
 telegram:
-  token : 5337630732:AAGNYzRkXSDL6woOCWf8mvexB5yUdn2P_gE
-  bot_name : weather_tsk_bot
+  token: token
+  bot_name: name
 
-weather :
-  url :
-    city : http://api.openweathermap.org/data/2.5/weather?q={city}&APPID=85aa52a555dac6ac36c4ecffbe15e13d&units=metric&lang=ru
-    location : https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid=85aa52a555dac6ac36c4ecffbe15e13d&units=metric&lang=ru
+weather:
+  appid: 85aa52a555dac6ac36c4ecffbe15e13d
+  url:
+    city: http://api.openweathermap.org/data/2.5/weather?q={city}&APPID=${weather.appid}&units=metric&lang=ru
+    location: https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid=${weather.appid}&units=metric&lang=ru
